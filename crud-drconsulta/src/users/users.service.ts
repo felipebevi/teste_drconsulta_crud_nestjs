@@ -1,4 +1,4 @@
-import { Body, Get, HttpException, Injectable, Param, Patch } from '@nestjs/common';
+import { Body, Delete, Get, HttpException, Injectable, Param, Patch } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -59,9 +59,9 @@ export class UsersService {
     );
   }
 
-  remove(
-    id: number
-  ) {
-    return `This action removes a #${id} user`;
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    return this.userRepository.remove(await this.findOneAsync(id));
   }
+  
 }
