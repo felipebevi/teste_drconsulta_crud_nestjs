@@ -5,7 +5,7 @@ import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let userId: number;  
+  let userId: number;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,12 +14,12 @@ describe('AppController (e2e)', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
   });
-  
+
   it('/ (GET) - carregar a pagina index.html', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Content-Type', /html/); 
+      .expect('Content-Type', /html/);
   });
 
   it('/users (POST) - criar um novo usuario', () => {
@@ -33,14 +33,14 @@ describe('AppController (e2e)', () => {
       .send(newUser)
       .expect(201)
       .then((response) => {
-        expect(response.body.id).toBeDefined(); 
+        expect(response.body.id).toBeDefined();
         expect(response.body.nome).toEqual(newUser.nome);
         expect(response.body.email).toEqual(newUser.email);
-        
+
         userId = response.body.id;
       });
   });
-  
+
   it('/users/:id (PATCH) - atualizar um usuario', () => {
     const updatedUser = {
       nome: 'updated user',
@@ -48,7 +48,7 @@ describe('AppController (e2e)', () => {
     };
 
     return request(app.getHttpServer())
-      .patch(`/users/${userId}`) 
+      .patch(`/users/${userId}`)
       .send(updatedUser)
       .expect(200)
       .then((response) => {
@@ -60,19 +60,14 @@ describe('AppController (e2e)', () => {
   it('/users/:id (DELETE) - deletar um usuario', () => {
     return request(app.getHttpServer())
       .get(`/users/${userId}`)
-      .then((response) => {
+      .then(() => {
         return request(app.getHttpServer())
-          .delete(`/users/${userId}`) 
+          .delete(`/users/${userId}`)
           .expect(200)
-          .then((deleteResponse) => {
-
+          .then(() => {
             return request(app.getHttpServer())
               .get(`/users/${userId}`)
-              .then((responseAfterDelete) => {
-                return request(app.getHttpServer())
-                  .get(`/users/${userId}`)
-                  .expect(404); 
-              });
+              .expect(404);
           });
       });
   });

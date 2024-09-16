@@ -1,4 +1,4 @@
-import { Body, Delete, Get, HttpException, Injectable, NotFoundException, Param, Patch } from '@nestjs/common';
+import { Body, Delete, Injectable, NotFoundException, Param, Patch } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  usersService: any;
+  usersService: unknown;
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -62,7 +62,6 @@ export class UsersService {
     if (result.affected === 0) {
       throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
     }
-    const checkUser = await this.userRepository.findOne({ where: { id } });
     return {
       message: 'Usuário deletado com sucesso',
     };
