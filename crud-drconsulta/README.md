@@ -48,3 +48,12 @@ Dois workflows (para CICD) foram configurados:
 
 ### 5. Documentação com Swagger (/api)
 Foi implementada a documentação interativa das APIs utilizando Swagger, permitindo visualizar e testar as rotas diretamente no navegador.
+
+
+## Melhorias a fazer quando necessário
+
+### 1. .ENV
+Criar um .env caso seja necessário usar outro banco de dados ou deseje armazenar informações sensíveis
+
+### 2. Sistema de autenticação
+Caso seja pertinente, implementar um sistema de autenticação, podendo usar OAuth, JWToken ou outros métodos
