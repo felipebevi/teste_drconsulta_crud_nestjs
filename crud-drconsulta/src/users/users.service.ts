@@ -1,4 +1,4 @@
-import { Body, Delete, Get, HttpException, Injectable, Param, Patch } from '@nestjs/common';
+import { Body, Delete, Get, HttpException, Injectable, NotFoundException, Param, Patch } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -30,16 +30,13 @@ export class UsersService {
 
   // ex. metodo async para tratamento de erro e melhor fluxo de processamento
   async findOneAsync(id: number): Promise<User> {
-    const userData =
-      await this.userRepository.findOneBy({ id });
-    if (!userData) {
-      throw new HttpException(
-        'User Not Found',
-        404,
-      );
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
     }
-    return userData;
+    return user;
   }
+  
 
   @Patch(':id')
   async update(
@@ -61,7 +58,15 @@ export class UsersService {
 
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    return this.userRepository.remove(await this.findOneAsync(id));
+    const result = await this.userRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado.`);
+    }
+    const checkUser = await this.userRepository.findOne({ where: { id } });
+    return {
+      message: 'Usuário deletado com sucesso',
+    };
   }
+  
   
 }
