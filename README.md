@@ -21,6 +21,7 @@ git init
 nest new crud-drconsulta
 cd crud-drconsulta
 nest g res users
+npm install
 npm run start
 ```
 
